@@ -1,0 +1,34 @@
+{
+  "name": "tripster",
+  "version": "0.1.0",
+  "description": "Travel with Friends",
+  "keywords": [
+    "trip",
+    "travel",
+    "friends",
+    "adventure",
+    "react",
+    "apollo",
+    "lerna",
+    "monorepo",
+    "graphql",
+    "node",
+    "ssr"
+  ],
+  "homepage": "https://tripster.vip",
+  "bugs": {
+    "url": "https://github.com/tumfoodery/tripster/issues"
+  },
+  "license": "MIT",
+  "contributors": [
+    "Sue Ann Ioanis <sueann.ioanis@gmail.com>",
+    "Michael Yuen <iam@mikey.baby>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tumfoodery/tripster.git"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  }
+}
