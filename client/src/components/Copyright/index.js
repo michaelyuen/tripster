@@ -8,7 +8,7 @@ export default function Copyright() {
       <Link color="inherit" href="https://tripster.vip">
         Tripster
       </Link>{' '}
-      {2020}
+      {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
