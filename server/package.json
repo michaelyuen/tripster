@@ -14,8 +14,17 @@
     "Sue Ann Ioanis <sueann.ioanis@gmail.com>",
     "Michael Yuen <iam@mikey.baby>"
   ],
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "apollo-datasource": "^0.6.4",
+    "apollo-server": "^2.9.16",
+    "apollo-server-testing": "^2.9.16",
+    "dotenv": "^8.2.0",
+    "firebase": "^7.7.0",
+    "nodemon": "^2.0.2"
   }
 }
