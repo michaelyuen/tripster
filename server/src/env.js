@@ -1,5 +1,6 @@
 module.exports = (function(env) {
   const propsWeWant = [
+    "NODE_ENV",
     "FIREBASE_API_KEY",
     "FIREBASE_AUTH_DOMAIN",
     "FIREBASE_DATABASE_URL",

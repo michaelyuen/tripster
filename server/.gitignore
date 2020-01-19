@@ -60,3 +60,6 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+
+# result of build for netlify functions
+dist

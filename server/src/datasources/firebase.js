@@ -1,6 +1,8 @@
 const { DataSource } = require("apollo-datasource");
-const firebase = require("firebase/app");
+const firebase = require("firebase/app").default;
 require("firebase/auth");
+// https://stackoverflow.com/questions/41214625/firebase-node-js-error-the-xmlhttprequest-compatibility-library-was-not-foun
+global["XMLHttpRequest"] = require("xmlhttprequest").XMLHttpRequest;
 
 class FirebaseAPI extends DataSource {
   constructor({ firebaseConfig }) {
