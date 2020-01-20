@@ -7,7 +7,8 @@ export default function Copyright() {
       {'Copyright © '}
       <Link color="inherit" href="https://tripster.vip">
         Tripster
-      </Link>{' '}
+      </Link>
+      {' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>

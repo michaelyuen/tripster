@@ -1,4 +1,4 @@
-# ✈️ tripster client - built on react
+# 🛎️ tripster client - built on react
 
 ## Available Scripts
 

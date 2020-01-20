@@ -8,6 +8,6 @@ export const typeDefs = `
   }
 
   type Query {
-    user: User
+    isLoggedIn: Boolean,
   }
 `;
