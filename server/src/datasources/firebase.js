@@ -1,16 +1,11 @@
-const { DataSource } = require("apollo-datasource");
-const firebase = require("firebase/app").default;
-require("firebase/auth");
 // https://stackoverflow.com/questions/41214625/firebase-node-js-error-the-xmlhttprequest-compatibility-library-was-not-foun
 global["XMLHttpRequest"] = require("xmlhttprequest").XMLHttpRequest;
+const { DataSource } = require("apollo-datasource");
 
 class FirebaseAPI extends DataSource {
-  constructor({ firebaseConfig }) {
+  constructor({ firebase }) {
     super();
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    this.firebase = firebase;
   }
 
   /**
@@ -39,7 +34,7 @@ class FirebaseAPI extends DataSource {
   }
 
   getCurrentUser() {
-    return firebase.auth().currentUser || null;
+    return this.firebase.auth().currentUser || null;
   }
 
   isLoggedIn() {
@@ -49,7 +44,7 @@ class FirebaseAPI extends DataSource {
   async login(args) {
     try {
       const { email, password } = args;
-      const { user } = await firebase
+      const { user } = await this.firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
       return user.uid;
@@ -61,7 +56,7 @@ class FirebaseAPI extends DataSource {
 
   async logout() {
     try {
-      return await firebase.auth().signOut();
+      return await this.firebase.auth().signOut();
     } catch (error) {
       console.error;
       return error.message;
@@ -104,7 +99,7 @@ class FirebaseAPI extends DataSource {
 
   async sendPasswordResetEmail(email) {
     try {
-      return await firebase.auth().sendPasswordResetEmail(email);
+      return await this.firebase.auth().sendPasswordResetEmail(email);
     } catch (error) {
       console.error(error);
       return error.message;
@@ -114,7 +109,9 @@ class FirebaseAPI extends DataSource {
   async signup(args) {
     try {
       const { email, password } = args;
-      const { user } = await firebase
+      const {
+        user
+      } = await this.firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
 
@@ -130,7 +127,7 @@ class FirebaseAPI extends DataSource {
 
   async verifyEmail(code) {
     try {
-      const _ = await firebase.auth().applyActionCode(code);
+      const _ = await this.firebase.auth().applyActionCode(code);
       return await this.reloadUser();
     } catch (error) {
       console.error(error);

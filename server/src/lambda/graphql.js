@@ -1,5 +1,7 @@
 require("dotenv").config();
 const { ApolloServer } = require("apollo-server-lambda");
+const firebase = require("firebase/app").default;
+require("firebase/auth");
 const env = require("../env");
 const typeDefs = require("../schema");
 const resolvers = require("../resolvers");
@@ -16,8 +18,10 @@ const firebaseConfig = {
   measurementId: env.FIREBASE_MEASUREMENT_ID
 };
 
+firebase.initializeApp(firebaseConfig);
+
 const dataSources = () => ({
-  firebaseAPI: new FirebaseAPI({ firebaseConfig })
+  firebaseAPI: new FirebaseAPI({ firebase })
 });
 
 const server = new ApolloServer({
@@ -31,7 +35,7 @@ const server = new ApolloServer({
 
 exports.handler = server.createHandler({
   cors: {
-    origin: '*',
+    origin: "*",
     credentials: true
   }
 });
