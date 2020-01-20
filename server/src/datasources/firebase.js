@@ -23,17 +23,88 @@ class FirebaseAPI extends DataSource {
     this.context = config.context;
   }
 
+  async deleteUser() {
+    try {
+      const currentUser = this.getCurrentUser();
+
+      if (!currentUser) {
+        return "User doesn't exist";
+      }
+
+      return await currentUser.delete();
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+
+  getCurrentUser() {
+    return firebase.auth().currentUser || null;
+  }
+
   isLoggedIn() {
-    return firebase.auth().currentUser ? true : false;
+    return this.getCurrentUser() ? true : false;
   }
 
   async login(args) {
     try {
       const { email, password } = args;
-      const res = await firebase
+      const { user } = await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
-      return res && res.user && res.user.uid;
+      return user.uid;
+    } catch (error) {
+      console.error(error);
+      return error.message;
+    }
+  }
+
+  async logout() {
+    try {
+      return await firebase.auth().signOut();
+    } catch (error) {
+      console.error;
+      return error.message;
+    }
+  }
+
+  async reloadUser() {
+    try {
+      const currentUser = this.getCurrentUser();
+
+      if (!currentUser) {
+        return "No user is logged in";
+      }
+
+      return await currentUser.reload();
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+
+  async sendEmailVerification() {
+    try {
+      const currentUser = this.getCurrentUser();
+
+      if (!currentUser) {
+        return "No user is logged in";
+      }
+
+      if (currentUser.emailVerified) {
+        return "User's email is already verified";
+      }
+
+      return await currentUser.sendEmailVerification();
+    } catch (error) {
+      console.error(error);
+      return error.message;
+    }
+  }
+
+  async sendPasswordResetEmail(email) {
+    try {
+      return await firebase.auth().sendPasswordResetEmail(email);
     } catch (error) {
       console.error(error);
       return error.message;
@@ -43,10 +114,24 @@ class FirebaseAPI extends DataSource {
   async signup(args) {
     try {
       const { email, password } = args;
-      const res = await firebase
+      const { user } = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
-      return res && res.user && res.user.uid;
+
+      // Attempt to send email verification
+      await this.sendEmailVerification();
+
+      return user.uid;
+    } catch (error) {
+      console.error(error);
+      return error.message;
+    }
+  }
+
+  async verifyEmail(code) {
+    try {
+      const _ = await firebase.auth().applyActionCode(code);
+      return await this.reloadUser();
     } catch (error) {
       console.error(error);
       return error.message;
