@@ -63,3 +63,6 @@ typings/
 
 # result of build for netlify functions
 dist
+
+# Firebase admin
+service-account-file.json

@@ -20,77 +20,59 @@ class FirebaseAPI extends DataSource {
 
   async deleteUser() {
     try {
-      const currentUser = this.getCurrentUser();
-
-      if (!currentUser) {
-        return "User doesn't exist";
+      if (!this.context.user) {
+        return null;
       }
 
-      return await currentUser.delete();
+      return await user.delete();
     } catch (error) {
       console.error(error);
-      return error;
+      return error.message;
     }
   }
 
   getCurrentUser() {
-    return this.firebase.auth().currentUser || null;
-  }
+    if (!this.context.user) {
+      return null;
+    }
 
-  isLoggedIn() {
-    return this.getCurrentUser() ? true : false;
+    return this.context.user;
   }
 
   async login(args) {
     try {
+      if (this.context.user) {
+        return await user.getIdToken();
+      }
+
       const { email, password } = args;
       const { user } = await this.firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
-      return user.uid;
+      /**
+       * Immediately logout
+       * Don't want to interact with firebase in a stateful manner
+       * i.e., token is what will determine if user is logged in, not firebase
+       */
+      await this.firebase.auth().signOut();
+      return await user.getIdToken();
     } catch (error) {
       console.error(error);
       return error.message;
-    }
-  }
-
-  async logout() {
-    try {
-      return await this.firebase.auth().signOut();
-    } catch (error) {
-      console.error;
-      return error.message;
-    }
-  }
-
-  async reloadUser() {
-    try {
-      const currentUser = this.getCurrentUser();
-
-      if (!currentUser) {
-        return "No user is logged in";
-      }
-
-      return await currentUser.reload();
-    } catch (error) {
-      console.error(error);
-      return error;
     }
   }
 
   async sendEmailVerification() {
     try {
-      const currentUser = this.getCurrentUser();
-
-      if (!currentUser) {
+      if (!this.context.user) {
         return "No user is logged in";
       }
 
-      if (currentUser.emailVerified) {
+      if (this.context.user.emailVerified) {
         return "User's email is already verified";
       }
 
-      return await currentUser.sendEmailVerification();
+      return await this.context.user.sendEmailVerification;
     } catch (error) {
       console.error(error);
       return error.message;
@@ -108,6 +90,10 @@ class FirebaseAPI extends DataSource {
 
   async signup(args) {
     try {
+      if (this.context.user) {
+        return "Why are you trying to sign up again?";
+      }
+
       const { email, password } = args;
       const {
         user
@@ -116,9 +102,15 @@ class FirebaseAPI extends DataSource {
         .createUserWithEmailAndPassword(email, password);
 
       // Attempt to send email verification
-      await this.sendEmailVerification();
+      await user.sendEmailVerification();
 
-      return user.uid;
+      /**
+       * Immediately logout
+       * Don't want to interact with firebase in a stateful manner
+       * i.e., token is what will determine if user is logged in, not firebase
+       */
+      await this.firebase.auth().signOut();
+      return await user.getIdToken();
     } catch (error) {
       console.error(error);
       return error.message;
@@ -127,8 +119,7 @@ class FirebaseAPI extends DataSource {
 
   async verifyEmail(code) {
     try {
-      const _ = await this.firebase.auth().applyActionCode(code);
-      return await this.reloadUser();
+      return await this.firebase.auth().applyActionCode(code);
     } catch (error) {
       console.error(error);
       return error.message;
