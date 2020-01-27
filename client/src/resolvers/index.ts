@@ -3,7 +3,7 @@
 export const defaults = {
   user: null,
   trips: [],
-  locations: [],
+  locations: []
 };
 
 export const resolvers = {
