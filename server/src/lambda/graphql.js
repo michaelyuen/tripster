@@ -1,4 +1,6 @@
 require("dotenv").config();
+// https://stackoverflow.com/questions/41214625/firebase-node-js-error-the-xmlhttprequest-compatibility-library-was-not-foun
+global["XMLHttpRequest"] = require("xmlhttprequest").XMLHttpRequest;
 const { ApolloServer } = require("apollo-server-lambda");
 const firebase = require("firebase/app").default;
 require("firebase/auth");
@@ -7,7 +9,8 @@ const env = require("../env");
 const resolvers = require("../resolvers");
 const typeDefs = require("../schema");
 const { parseToken } = require("../utils");
-const FirebaseAPI = require("../datasources/firebase");
+const FirebaseAdmin = require("../datasources/firebaseAdmin");
+const FirebaseClient = require("../datasources/firebaseClient");
 
 const firebaseConfig = {
   apiKey: env.FIREBASE_API_KEY,
@@ -28,7 +31,8 @@ admin.initializeApp({
 });
 
 const dataSources = () => ({
-  firebaseAPI: new FirebaseAPI({ firebase })
+  firebaseAdmin: new FirebaseAdmin({ admin }),
+  firebaseClient: new FirebaseClient({ firebase })
 });
 
 const context = async req => {

@@ -14,6 +14,10 @@
     "Sue Ann Ioanis <sueann.ioanis@gmail.com>",
     "Michael Yuen <iam@mikey.baby>"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tumfoodery/tripster.git"
+  },
   "main": "src/lambda/graphql.js",
   "scripts": {
     "build": "npm run clean && netlify-lambda build src/lambda --config webpack.lambda.js",
@@ -27,7 +31,7 @@
     "apollo-server-testing": "^2.9.16",
     "dotenv": "^8.2.0",
     "firebase": "^7.7.0",
-    "firebase-admin": "^8.9.1",
+    "firebase-admin": "^8.9.2",
     "netlify-lambda": "^1.6.3",
     "webpack-node-externals": "^1.7.2",
     "xmlhttprequest": "^1.8.0"

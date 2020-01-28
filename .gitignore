@@ -60,3 +60,9 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+
+# result of build for netlify functions
+server/dist
+
+# Firebase admin
+service-account-file.json
