@@ -14,6 +14,11 @@ const resolvers = {
     ) => firebaseClient.sendPasswordResetEmail(email)
   },
   Mutation: {
+    confirmPasswordReset: async (
+      _,
+      { code, newPassword },
+      { dataSources: { firebaseClient } }
+    ) => await firebaseClient.confirmPasswordReset(code, newPassword),
     deleteUser: async (_, __, { dataSources: { firebaseAdmin } }) =>
       firebaseAdmin.deleteUser(),
     login: async (_, args, { dataSources: { firebaseClient } }) =>
@@ -25,7 +30,12 @@ const resolvers = {
       return user.getIdToken();
     },
     verifyEmail: async (_, { code }, { dataSources: { firebaseClient } }) =>
-      firebaseClient.verifyEmail(code)
+      firebaseClient.verifyEmail(code),
+    verifyPasswordResetCode: async (
+      _,
+      { code },
+      { dataSources: { firebaseClient } }
+    ) => firebaseClient.verifyPasswordResetCode(code)
   }
 };
 

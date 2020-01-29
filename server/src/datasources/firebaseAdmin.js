@@ -25,12 +25,13 @@ class FirebaseAdmin extends DataSource {
   async createUser(uid, args) {
     try {
       const { email, firstName, lastName } = args;
-      return await this.db.doc(`users/${uid}`).set({
+      await this.db.doc(`users/${uid}`).set({
         email,
         firstName,
         lastName,
         uid
       });
+      return "🛸";
     } catch (error) {
       console.error(error);
       throw new ApolloError(`Create User Error: ${error.message}`);
@@ -43,7 +44,8 @@ class FirebaseAdmin extends DataSource {
     }
     try {
       this.db.doc(`users/${this.context.user.uid}`).delete();
-      return await this.admin.auth().deleteUser(this.context.user.uid);
+      await this.admin.auth().deleteUser(this.context.user.uid);
+      return "🛸";
     } catch (error) {
       console.error(error);
       throw new ApolloError(`Delete User Error: ${error.message}`);

@@ -8,6 +8,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    confirmPasswordReset(code: String!, newPassword: String!): String
     deleteUser: String
     login(email: String!, password: String!): String
     signup(
@@ -17,6 +18,7 @@ const typeDefs = gql`
       password: String!
     ): String
     verifyEmail(code: String!): String
+    verifyPasswordResetCode(code: String!): String
   }
 
   type User {

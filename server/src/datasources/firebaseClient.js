@@ -11,6 +11,16 @@ class FirebaseClient extends DataSource {
     this.context = config.context;
   }
 
+  async confirmPasswordReset(code, newPassword) {
+    try {
+      await this.firebase.auth().confirmPasswordReset(code, newPassword);
+      return "🛸";
+    } catch (error) {
+      console.error(error);
+      throw new ApolloError(error.message);
+    }
+  }
+
   async login(args) {
     try {
       const { email, password } = args;
@@ -45,7 +55,7 @@ class FirebaseClient extends DataSource {
         .signInWithCustomToken(customToken);
       await user.sendEmailVerification();
       this.firebase.auth().signOut();
-      return;
+      return "🛸";
     } catch (error) {
       console.error(error);
       throw new ApolloError(error.message);
@@ -54,7 +64,8 @@ class FirebaseClient extends DataSource {
 
   async sendPasswordResetEmail(email) {
     try {
-      return await this.firebase.auth().sendPasswordResetEmail(email);
+      await this.firebase.auth().sendPasswordResetEmail(email);
+      return "🛸";
     } catch (error) {
       console.error(error);
       throw new ApolloError(error.message);
@@ -91,7 +102,18 @@ class FirebaseClient extends DataSource {
 
   async verifyEmail(code) {
     try {
-      return await this.firebase.auth().applyActionCode(code);
+      await this.firebase.auth().applyActionCode(code);
+      return "🛸";
+    } catch (error) {
+      console.error(error);
+      throw new ApolloError(error.message);
+    }
+  }
+
+  async verifyPasswordResetCode(code) {
+    try {
+      await this.firebase.auth().verifyPasswordResetCode(code);
+      return "🛸";
     } catch (error) {
       console.error(error);
       throw new ApolloError(error.message);
