@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+import { noop } from "../../utils/fn";
+import Button from "../Button";
+import Input from "../Input";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -10,7 +13,10 @@ const LOGIN = gql`
 `;
 
 export default function Login() {
-  const [credentials, setCredentials] = useState({});
+  const [
+    credentials
+    // setCredentials
+  ] = useState({});
   const [login, { data }] = useMutation(LOGIN);
 
   if (
@@ -29,17 +35,9 @@ export default function Login() {
         if (credentials) login({ variables: credentials });
       }}
     >
-      <input
-        onChange={e =>
-          setCredentials({ ...credentials, email: e.target.value })
-        }
-      />
-      <input
-        onChange={e =>
-          setCredentials({ ...credentials, password: e.target.value })
-        }
-      />
-      <button type="submit">Sign In</button>
+      <Input onChange={noop} />
+      <Input onChange={noop} />
+      <Button>Sign In</Button>
       <Link to="/forgot">Forgot password?</Link>
       <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
     </form>

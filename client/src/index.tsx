@@ -7,6 +7,8 @@ import { typeDefs } from "./schema";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+import 'modern-normalize/modern-normalize.css';
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const client = new ApolloClient({

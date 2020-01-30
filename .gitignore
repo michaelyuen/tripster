@@ -66,3 +66,5 @@ server/dist
 
 # Firebase admin
 service-account-file.json
+
+client/build
