@@ -1,11 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { CopyrightContainer } from "./style";
 
 export default function Copyright() {
   return (
-    <footer>
+    <CopyrightContainer>
       {"Copyright © "}
-      <a href="https://tripster.vip">Tripster</a> {new Date().getFullYear()}
+      <Link to="/">Tripster</Link> {new Date().getFullYear()}
       {"."}
-    </footer>
+    </CopyrightContainer>
   );
 }

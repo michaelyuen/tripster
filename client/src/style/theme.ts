@@ -1,30 +1,43 @@
 import { DefaultTheme, createGlobalStyle } from "styled-components";
+import { colorText, colorBackground, colorLink } from "./themeFunctions";
+
+const darkMode =
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 export const theme: DefaultTheme = {
   color: {
-    background: "#f8f5f2",
-    link: "#078080",
-    text: "#232323",
-    secondary: "#f45d48"
+    background: darkMode ? "#1b1b1b" : "#FFFFFF",
+    link: "#7f5af0",
+    buttonText: "#fffffe",
+    text: darkMode ? "#FFFFFF" : "#000",
+    secondary: "#7f5af0"
   },
   grid: {
-    maxWidth: "1600px"
+    maxWidth: "1600px",
+    fullPageFormWidth: "300px"
   },
   spacing: {
     default: "10px",
-    borderRadius: "2px",
-    border: "1px"
+    borderRadius: "4px",
+    border: "1px",
+    large: "60px"
+  },
+  font: {
+    small: "12px",
+    medium: "14px"
   }
 };
 
 export const GlobalStyle = createGlobalStyle`
-body {
-  color: ${props => props.theme.color.text};
-  background: ${props => props.theme.color.background};
-  max-width: ${props => props.theme.grid.maxWidth};
-}
-a {
-  text-decoration: none;
-  color: ${props => props.theme.color.link};
-}
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: ${colorText};
+    background: ${colorBackground};
+  }
+  a {
+    text-decoration: none;
+    color: ${colorLink};
+  }
 `;

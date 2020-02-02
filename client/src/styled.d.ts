@@ -7,5 +7,6 @@ declare module "styled-components" {
     color: any;
     spacing: any;
     grid: any;
+    font: any;
   }
 }

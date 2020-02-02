@@ -1,21 +1,19 @@
 import React from "react";
-import styled from "styled-components";
-import { noop } from "../../utils/fn";
+import { noop } from "utils/fn";
+import { InputContainer } from "./style";
 
-const InputContainer = styled.input`
-  border: none;
-  border-bottom: 1px solid;
-  background: transparent;
-  margin: ${props => props.theme.spacing.default};
-  padding: ${props => props.theme.spacing.default};
-`;
-
-export default function Input(prop: {
-  placeholder?: string;
-  onChange?: Function;
-}) {
-  const { placeholder = "", onChange = noop } = prop;
+export default function Input(prop: any) {
+  const { placeholder = "", name = "", onChange = noop, ...rest } = prop;
   return (
-    <InputContainer placeholder={placeholder} onChange={e => onChange(e)} />
+    <InputContainer>
+      {name}
+      <br />
+      <input
+        placeholder={placeholder}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
+        {...rest}
+        data-lpignore="true"
+      />
+    </InputContainer>
   );
 }

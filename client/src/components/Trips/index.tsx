@@ -1,5 +1,8 @@
 import React from "react";
+import styled from "styled-components";
+
+const TripsContainer = styled.div``;
 
 export default function Trips() {
-  return <div>TRIPS</div>;
+  return <TripsContainer>Trips</TripsContainer>;
 }

@@ -1,5 +1,3 @@
-// import { gql } from "apollo-boost";
-
 export const defaults = {
   user: null,
   trips: [],
