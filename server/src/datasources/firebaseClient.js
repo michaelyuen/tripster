@@ -67,6 +67,9 @@ class FirebaseClient extends DataSource {
       await this.firebase.auth().sendPasswordResetEmail(email);
       return "🛸";
     } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        return "🛸";
+      }
       console.error(error);
       throw new ApolloError(error.message);
     }
