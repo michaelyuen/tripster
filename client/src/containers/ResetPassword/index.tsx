@@ -1,49 +1,74 @@
 import React, { useState, ReactNode } from "react";
 import { gql } from "apollo-boost";
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import Input from "components/Input";
 import Form from "components/Form";
 import Button from "components/Button";
 import { LayoutSmall } from "components/Layout";
+import { noop } from "utils/fn";
 
 interface FormStateMap {
   [index: string]: ReactNode;
 }
 
-const SEND_PASSWORD_RESET_EMAIL = gql`
-  query sendPasswordResetEmail($email: String!) {
-    sendPasswordResetEmail(email: $email)
+const CONFIRM_PASSWORD_RESET = gql`
+  mutation confirmPasswordReset($code: String!, $newPassword: String!) {
+    confirmPasswordReset(code: $code, newPassword: $newPassword)
   }
 `;
 
-export default function SignUp() {
-  const [email, setEmail] = useState({});
-  const [
-    sendPasswordResetEmail,
-    { called, data, error, loading }
-  ] = useLazyQuery(SEND_PASSWORD_RESET_EMAIL);
+export default function ResetPassword(props: any) {
+  const code = new URLSearchParams(props.location.search).get("oobCode");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordReset, { called, data, error, loading }] = useMutation(
+    CONFIRM_PASSWORD_RESET
+  );
+  console.log(called, data, error, loading);
   const formStateMap: FormStateMap = {
     defaultState: (
-      <Form
-        onSubmit={(e: React.ChangeEvent<HTMLInputElement>) => {
-          e.preventDefault();
-          sendPasswordResetEmail({ variables: { email } });
-        }}
-      >
-        <h1>🏕</h1>
-        <Input
-          name="Email"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value)
-          }
-          required
-          type="email"
-        />
-        <Button type="submit">Submit</Button>
-      </Form>
+      <>
+        <Form
+          onSubmit={(e: React.ChangeEvent<HTMLInputElement>) => {
+            e.preventDefault();
+            if (
+              newPassword &&
+              confirmPassword &&
+              newPassword === confirmPassword
+            ) {
+              confirmPasswordReset({ variables: { code, newPassword } }).catch(
+                noop
+              );
+            }
+          }}
+        >
+          <h1>🏕</h1>
+          <Input
+            name="New Password"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewPassword(e.target.value)
+            }
+            required
+            type="password"
+          />
+          <Input
+            name="Confirm Password"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmPassword(e.target.value)
+            }
+            required
+            type="password"
+          />
+          <Button type="submit">Submit</Button>
+        </Form>
+        {newPassword &&
+          confirmPassword &&
+          newPassword !== confirmPassword &&
+          "Your passwords don't match, dummy!"}
+        {error && "Something went wrong. Please try again."}
+      </>
     ),
     loading: "Loading...",
-    error: "Something went wrong. Please try again.",
     success: (
       <>
         <h1 style={{ textAlign: "center" }}>
@@ -51,7 +76,8 @@ export default function SignUp() {
             🛸
           </span>
         </h1>
-        <div>If an account exists, you should receive an email shortly.</div>
+        <h3>Great success!</h3>
+        <div>Your password has been reset.</div>
       </>
     )
   };
@@ -60,10 +86,6 @@ export default function SignUp() {
   if (called) {
     if (loading) {
       state = "loading";
-    }
-
-    if (error) {
-      state = "error";
     }
 
     if (data) {
